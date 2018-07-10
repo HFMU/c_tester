@@ -19,7 +19,7 @@ void test(void) {
   int a;
   a=cfooF(5);
 
-  printf("%i\n", a);
+  printf("\r\nResult of cfooF: %i\n", a);
   
   dlclose(handle);
 }
