@@ -3,7 +3,11 @@ Application written in C to test hfmu.
 
 ## Development instructions
 Build with:
-```cmake .```
+```shell
+cmake .
+```
 
 Followed by:
-```make```
+```shell
+make
+```
