@@ -10,7 +10,7 @@ typedef int (*printEnv)(void*);
 typedef bool (*updateEnv)(void*);
 
 void cbLogger(fmi2ComponentEnvironment cEnv, fmi2String instanceName, fmi2Status status, fmi2String category, fmi2String message, ...){
-  printf("msg: %s", message);
+  printf("msg: %s\n", message);
 }
 
 
@@ -31,8 +31,18 @@ void test(void) {
   fmi2Instantiate = dlsym(handle, "fmi2Instantiate");
   fmi2Component comp;
   comp = fmi2Instantiate("hsInstance", type, "guid", "resourceLoc", &cbFuncs, false, false);
-  printf("C: Result of fmi2Instantiate %p", comp);
+  printf("C: Result of fmi2Instantiate %p\n", comp);
 
+  // Comment setup experiment to see Haskell fail because the end time has not been set
+  fmi2SetupExperimentTYPE * fmi2SetupExperiment;
+  fmi2SetupExperiment = dlsym(handle, "fmi2SetupExperiment");
+  fmi2Status result = fmi2SetupExperiment(comp, false, 0, 0, false, 2.25);
+
+
+  fmi2EnterInitializationModeTYPE* fmi2EnterInitializationMode;
+  fmi2EnterInitializationMode = dlsym(handle, "fmi2EnterInitializationMode");
+  result = fmi2EnterInitializationMode(comp);
+  printf("C: Result of fmi2EnterInitializationMode: %i\n", result);
 
 
   //  cbFuncs.allocateMemory = NULL;
