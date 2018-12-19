@@ -18,7 +18,7 @@ void cbLogger(fmi2ComponentEnvironment cEnv, fmi2String instanceName, fmi2Status
 void test(void) {
   // Load the library
   void *handle;
-  handle = dlopen("/Users/casperthule/source/haskell/HFMU/HFMU/dist/build/HFMU/libHFMU.dylib", RTLD_LAZY);
+  handle = dlopen("/Users/casperthule/source/haskell/HFMU/hfmu/dist-newstyle/build/x86_64-osx/ghc-8.4.4/hfmu-0.1.0.0/f/HFMU/build/HFMU/libHFMU.dylib", RTLD_LAZY);
   if(!handle){
       fprintf(stderr, "%s\n", dlerror());
       exit(EXIT_FAILURE);
@@ -44,6 +44,87 @@ void test(void) {
   result = fmi2EnterInitializationMode(comp);
   printf("C: Result of fmi2EnterInitializationMode: %i\n", result);
 
+  printf("C: min to 1.0 and max to 5.0\n");
+  fmi2SetRealTYPE* fmi2SetReal;
+  fmi2SetReal = dlsym(handle, "fmi2SetReal");
+  unsigned int setRealVRef1[2] = {0,2};
+  double setRealVal[2] = {1.0,5.0};
+  result = fmi2SetReal(comp, setRealVRef1, 2, setRealVal);
+  printf("C: Results of fmi2SetReal: %i\n",result);
+
+  fmi2ExitInitializationModeTYPE* fmi2ExitInitializationMode;
+  fmi2ExitInitializationMode = dlsym(handle, "fmi2ExitInitializationMode");
+  result = fmi2ExitInitializationMode(comp);
+  printf("C: Results of fmi2ExitInitializationMode: %i\n",result);
+
+  double level = 6.0;
+  printf("C: Setting level to %f. Expected valve: Open\n",level);
+  unsigned int setLevelRef[1] = {1};
+  double setLevelVal[1] = {level};
+  result = fmi2SetReal(comp, setLevelRef, 1, setLevelVal);
+  printf("C: Results of fmi2SetReal: %i\n",result);
+
+  fmi2DoStepTYPE* fmi2DoStep;
+  fmi2DoStep = dlsym(handle, "fmi2DoStep");
+  double ccp = 0.0;
+  double css = 0.1;
+  bool noSetPrior = true;
+  result = fmi2DoStep(comp, ccp, css, noSetPrior);
+  printf("C: Results of fmi2DoStep: %i\n",result);
+
+  fmi2GetBooleanTYPE* fmi2GetBoolean;
+  fmi2GetBoolean = dlsym(handle,"fmi2GetBoolean");
+  unsigned int valveVRef[1] = {3};
+  int* valveVal = (int *)malloc(sizeof(int)*1);
+  result = fmi2GetBoolean(comp, valveVRef, 1, valveVal);
+  printf("C: Results of fmi2GetBoolean: %i\n",result);
+  printf("C: Valve output: %i\n", *valveVal);
+
+  level = 4.0;
+  printf("C: Setting level to %f. Expected valve: Open\n",level);
+  setLevelVal[0] = level;
+  result = fmi2SetReal(comp, setLevelRef, 1, setLevelVal);
+  printf("C: Results of fmi2SetReal: %i\n",result);
+
+  ccp = 0.1;
+  css = 0.1;
+  result = fmi2DoStep(comp, ccp, css, noSetPrior);
+  printf("C: Results of fmi2DoStep: %i\n",result);
+
+  result = fmi2GetBoolean(comp, valveVRef, 1, valveVal);
+  printf("C: Results of fmi2GetBoolean: %i\n",result);
+  printf("C: Valve output: %i\n", *valveVal);
+
+  level = 0.0;
+  printf("C: Setting level to %f. Expected valve: Closed\n", level);
+  setLevelVal[0] = level;
+  result = fmi2SetReal(comp, setLevelRef, 1, setLevelVal);
+  printf("C: Results of fmi2SetReal: %i\n",result);
+
+  ccp = 0.2;
+  css = 0.1;
+  result = fmi2DoStep(comp, ccp, css, noSetPrior);
+  printf("C: Results of fmi2DoStep: %i\n",result);
+
+  result = fmi2GetBoolean(comp, valveVRef, 1, valveVal);
+  printf("C: Results of fmi2GetBoolean: %i\n",result);
+  printf("C: Valve output: %i\n", *valveVal);
+
+
+  level = 4;
+  printf("C: Setting level to %f. Expected valve: Closed\n",level);
+  setLevelVal[0] = level;
+  result = fmi2SetReal(comp, setLevelRef, 1, setLevelVal);
+  printf("C: Results of fmi2SetReal: %i\n",result);
+
+  ccp = 0.3;
+  css = 0.1;
+  result = fmi2DoStep(comp, ccp, css, noSetPrior);
+  printf("C: Results of fmi2DoStep: %i\n",result);
+
+  result = fmi2GetBoolean(comp, valveVRef, 1, valveVal);
+  printf("C: Results of fmi2GetBoolean: %i\n",result);
+  printf("C: Valve output: %i\n", *valveVal);
 
   //  cbFuncs.allocateMemory = NULL;
   //cbFuncs.freeMemory = NULL;
