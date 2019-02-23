@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 #include "fmi/fmi2functions.h"
+#include "TargetConditionals.h"
 
 typedef int (*foo)(int);
 typedef bool (*instantiateLEG)(char[]);
@@ -18,12 +19,27 @@ void cbLogger(fmi2ComponentEnvironment cEnv, fmi2String instanceName, fmi2Status
 void test(void) {
   // Load the library
   void *handle;
-  handle = dlopen("/Users/casperthule/source/haskell/HFMU/hfmu/dist-newstyle/build/x86_64-osx/ghc-8.4.4/hfmu-0.1.0.0/f/HFMU/build/HFMU/libHFMU.dylib", RTLD_LAZY);
+
+  char* libPath = "/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib";
+  //Old
+ handle = dlopen(libPath, RTLD_LAZY);
+
+    //New
+//  handle = dlopen(
+//                  "/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib",
+//                  RTLD_LAZY |
+//                  RTLD_LOCAL |
+//                  RTLD_FIRST
+//                  );
+
   if(!handle){
-      fprintf(stderr, "%s\n", dlerror());
+      fprintf(stderr, " Failed to open library: %s\n", dlerror());
       exit(EXIT_FAILURE);
   }
   dlerror();
+
+  printf("processing fmi2Instantiate\n");
+
   // Setup experiment
   fmi2Type type = fmi2CoSimulation;
   fmi2CallbackFunctions cbFuncs = {.logger = &cbLogger, .allocateMemory = NULL, .freeMemory = NULL, .stepFinished = NULL, .componentEnvironment = NULL};
