@@ -22,15 +22,15 @@ void test(void) {
 
   char* libPath = "/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib";
   //Old
- handle = dlopen(libPath, RTLD_LAZY);
+ //handle = dlopen(libPath, RTLD_LAZY);
 
     //New
-//  handle = dlopen(
-//                  "/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib",
-//                  RTLD_LAZY |
-//                  RTLD_LOCAL |
-//                  RTLD_FIRST
-//                  );
+  handle = dlopen(
+                  "/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib",
+                  RTLD_LAZY |
+                  RTLD_LOCAL |
+                  RTLD_FIRST
+                  );
 
   if(!handle){
       fprintf(stderr, " Failed to open library: %s\n", dlerror());
