@@ -20,13 +20,13 @@ void test(void) {
   // Load the library
   void *handle;
 
-  char* libPath = "/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib";
+  char* libPath = "/Users/au443759/source/hfmu/hfmu/dist-newstyle/build/x86_64-osx/ghc-8.10.7/hfmu-0.1.0.0/f/HFMU/build/HFMU/libHFMU.dylib";
   //Old
  //handle = dlopen(libPath, RTLD_LAZY);
 
     //New
-  handle = dlopen(
-                  "/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib",
+  handle = dlopen(libPath,
+                  //"/Users/casperthule/source/haskell/HFMU/ex_water-tank/dist-newstyle/build/x86_64-osx/ghc-8.4.4/ex-water-tank-0.1.0.0/f/watertankController/build/watertankController/libwatertankController.dylib",
                   RTLD_LAZY |
                   RTLD_LOCAL |
                   RTLD_FIRST
